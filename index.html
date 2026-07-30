@@ -1,43 +1,153 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>나의 첫 홈페이지</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      text-align: center;
-      padding: 50px;
-    }
-
-    h1 {
-      color: #333333;
-    }
-
-    p {
-      color: #666666;
-      font-size: 18px;
-    }
-
-    button {
-      padding: 12px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포켓몬 도블 마스터 | 그림 외우기 메모리 게임</title>
+    <meta name="description" content="포켓몬 도블의 57가지 다양한 그림들을 효율적으로 암기하고 마스터하는 인터랙티브 웹앱. 도감 학습, 맞히기 퀴즈, 실전 도블 트레이너 및 카드 뒤집기 게임 탑재!">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- favicon placeholder using general Poké Ball style inline svg -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23fff' stroke='%23333' stroke-width='4'/><path d='M4 50 A 46 46 0 0 1 96 50 Z' fill='%23ff1f44' stroke='%23333' stroke-width='4'/><circle cx='50' cy='50' r='16' fill='%23fff' stroke='%23333' stroke-width='6'/></svg>">
 </head>
-
 <body>
-  <h1>안녕하세요!</h1>
 
-  <p>메모장으로 만든 나의 첫 홈페이지입니다.</p>
+    <!-- Header Section -->
+    <header>
+        <div class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="46" fill="#ffd13b" stroke="#3b4cca" stroke-width="6"/>
+                <path d="M6 50 A 44 44 0 0 1 94 50 Z" fill="#ff1f44"/>
+                <line x1="4" y1="50" x2="96" y2="50" stroke="#3b4cca" stroke-width="8"/>
+                <circle cx="50" cy="50" r="18" fill="#fff" stroke="#3b4cca" stroke-width="8"/>
+                <circle cx="50" cy="50" r="8" fill="#3b4cca"/>
+            </svg>
+            <h1 class="logo-text">포켓몬 도블 마스터<span class="logo-badge">PRO</span></h1>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <nav>
+            <button class="nav-btn active" data-view="study">
+                📖 도감 학습
+            </button>
+            <button class="nav-btn" data-view="quiz">
+                ❓ 이름 퀴즈
+            </button>
+            <button class="nav-btn" data-view="dobble">
+                ⚡ 도블 트레이너
+            </button>
+            <button class="nav-btn" data-view="memory">
+                🧩 카드 뒤집기
+            </button>
+            
+            <!-- Sound Toggle Control -->
+            <div class="sound-toggle-wrapper">
+                <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">🔊 효과음</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sound-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </nav>
+    </header>
 
-  <button onclick="alert('버튼을 눌렀어요!')">
-    눌러 보세요
-  </button>
+    <!-- Stats Dashboard widget -->
+    <section class="dashboard-bar">
+        <div class="stat-widget">
+            <div class="stat-icon-wrapper">🎓</div>
+            <div class="stat-info" style="flex:1;">
+                <span class="stat-label">그림 암기 진행도</span>
+                <span class="stat-value" id="learned-count">0 / 57</span>
+                <div class="progress-container">
+                    <div class="progress-bar" id="overall-progress-bar"></div>
+                </div>
+            </div>
+            <div class="stat-value" id="learned-percentage-text" style="font-size:1rem; margin-top:1.2rem;">0%</div>
+        </div>
+        
+        <div class="stat-widget">
+            <div class="stat-icon-wrapper">🔥</div>
+            <div class="stat-info">
+                <span class="stat-label">퀴즈 최고 콤보</span>
+                <span class="stat-value" id="ds-quiz-streak">0 콤보</span>
+            </div>
+        </div>
+        
+        <div class="stat-widget">
+            <div class="stat-icon-wrapper">⚡</div>
+            <div class="stat-info">
+                <span class="stat-label">도블 최고 점수</span>
+                <span class="stat-value" id="ds-dobble-score">0점</span>
+            </div>
+        </div>
+        
+        <div class="stat-widget">
+            <div class="stat-icon-wrapper">⏱️</div>
+            <div class="stat-info">
+                <span class="stat-label">매치 최고 시간</span>
+                <span class="stat-value" id="ds-memory-time">--초</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Views Container -->
+    <main>
+        
+        <!-- SECTION 1: STUDY MODE -->
+        <section id="study-section" class="view-section active">
+            <div class="filter-bar">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="study-search" class="search-input" placeholder="이름 또는 영문명 검색...">
+                </div>
+                <div class="filter-tags">
+                    <button class="filter-tag active" data-filter="all">전체</button>
+                    <button class="filter-tag" data-filter="pokemons">포켓몬</button>
+                    <button class="filter-tag" data-filter="items">아이템/속성</button>
+                    <button class="filter-tag" data-filter="characters">인물</button>
+                </div>
+            </div>
+            
+            <div class="cards-grid" id="study-grid">
+                <!-- Cards dynamically loaded from symbols.js -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: QUIZ MODE -->
+        <section id="quiz-section" class="view-section">
+            <div class="quiz-mode-selector">
+                <button class="quiz-mode-btn active" data-mode="choice">객관식 (4지선다)</button>
+                <button class="quiz-mode-btn" data-mode="write">주관식 (타이핑)</button>
+            </div>
+            
+            <div class="dobble-top-bar" style="max-width: 600px; margin-bottom: 1.5rem;">
+                <div class="quiz-score-pill" style="color:var(--accent);">🔥 <span id="quiz-streak-val">0 콤보 (최고: 0)</span></div>
+                <div class="quiz-score-pill">점수: <span id="quiz-score-val">0</span>점</div>
+            </div>
+            
+            <div id="quiz-game-container">
+                <!-- Quiz question content loaded from app.js -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: DOBBLE TRAINER MODE -->
+        <section id="dobble-section" class="view-section">
+            <div id="dobble-playfield-wrapper">
+                <!-- Dynamic playfield (Settings / Game Arena / Game Over screen) -->
+            </div>
+        </section>
+
+        <!-- SECTION 4: CARD MATCHING MODE -->
+        <section id="memory-section" class="view-section">
+            <div id="memory-playfield-wrapper">
+                <!-- Dynamic Memory Match Layout -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Project Data & Scripts -->
+    <script src="symbols.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
